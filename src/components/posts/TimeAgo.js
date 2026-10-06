@@ -1,15 +1,23 @@
+import React from "react";
 import { parseISO, formatDistanceToNow } from "date-fns";
 
 const TimeAgo = ({ date }) => {
-  const postDate = parseISO(date);
-  const timePeriod = formatDistanceToNow(postDate);
+  let timeAgo = "";
+  if (date) {
+    try {
+      const parsedDate = parseISO(date);
+      const timePeriod = formatDistanceToNow(parsedDate);
+      timeAgo = `${timePeriod} ago`;
+    } catch (e) {
+      timeAgo = "recently";
+    }
+  }
 
   return (
-    <div className="justify-content-end">
-      <span title={date} className="postCredit">
-        &nbsp; &nbsp; posted : <em> {timePeriod} </em> ago
-      </span>
-    </div>
+    <span className="text-muted d-inline-flex align-items-center gap-1 small" title={date}>
+      <i className="bi bi-clock" style={{ fontSize: "0.8rem" }}></i>
+      <span>{timeAgo}</span>
+    </span>
   );
 };
 
