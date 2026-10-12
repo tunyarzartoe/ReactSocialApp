@@ -1,61 +1,82 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
+import { Modal } from "react-bootstrap";
 import { deletePost } from "./postSlice";
 import { toast } from "react-toastify";
 
-const DeletePostModal = ({ post, handleClose,show }) => {
-  const navigate = useNavigate();
+const DeletePostModal = ({ post, show, handleClose }) => {
   const dispatch = useDispatch();
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+  const [loading, setLoading] = useState(false);
 
-
-  const handleDeletePost = async (event) => {
-    event.preventDefault();
-      setAddRequestStatus("pending");
-      await dispatch(deletePost(post.id)).unwrap();
-      navigate("/post/post-table");
+  const onDelete = async () => {
+    if (!post) return;
+    try {
+      setLoading(true);
+      await dispatch(deletePost({ id: post.id })).unwrap();
+      toast.success("🗑️ Post deleted successfully!");
       handleClose();
-      toast.success("Post deleted successfully!");
-    };
-    console.log("show==>",show)
+    } catch (err) {
+      console.error("Failed to delete:", err);
+      toast.error("Failed to delete post. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div
-      className="modal fade"
-      id="deleteModal"
-      tabIndex="-1"
-      aria-labelledby="deleteModal"
-    //   aria-hidden="true"
-      aria-hidden={!show}
+    <Modal show={show} onHide={handleClose} centered contentClassName="modal-glass">
+      <Modal.Header closeButton>
+        <Modal.Title>
+          <i
+            className="bi bi-exclamation-triangle-fill me-2"
+            style={{ color: "var(--accent-red)" }}
+          />
+          Delete Post
+        </Modal.Title>
+      </Modal.Header>
 
-    >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content delete-modal">
-          <div className="modal-body text-center mt-2">
-            <p>Are you sure you want to delete this post?</p>
-          </div>
-          <div className="text-end modal-footer" style={{ borderTop: 0 }}>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-              onClick={handleClose()}
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={handleDeletePost}
-              data-bs-dismiss={!show ?"modal":""}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Modal.Body>
+        <p style={{ color: "var(--text-secondary)", marginBottom: 0 }}>
+          Are you sure you want to delete{" "}
+          <strong style={{ color: "var(--text-primary)" }}>
+            &ldquo;{post?.title}&rdquo;
+          </strong>
+          ? This action cannot be undone.
+        </p>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <button className="btn-ghost" onClick={handleClose} disabled={loading}>
+          Cancel
+        </button>
+        <button
+          onClick={onDelete}
+          disabled={loading}
+          style={{
+            background: "var(--accent-red)",
+            color: "#fff",
+            border: "none",
+            borderRadius: "var(--radius-sm)",
+            padding: "0.45rem 1.1rem",
+            fontWeight: 500,
+            fontSize: "0.875rem",
+            cursor: "pointer",
+            transition: "var(--transition)",
+          }}
+        >
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" />
+              Deleting...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-trash me-1" /> Delete
+            </>
+          )}
+        </button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

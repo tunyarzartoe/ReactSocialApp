@@ -3,18 +3,15 @@ import React from "react";
 const MainLoading = () => {
   return (
     <div
-      className="d-flex flex-column align-items-center justify-content-center"
-      style={{ minHeight: "80vh" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #0d1117 0%, #161b27 50%, #0d1b35 100%)",
+      }}
     >
-      <div
-        className="spinner-grow text-primary"
-        role="status"
-        style={{ width: "3.5rem", height: "3.5rem" }}
-      >
-        <span className="visually-hidden">Loading Social App...</span>
-      </div>
-      <h5 className="mt-4 text-white fw-bold">SocialVerse</h5>
-      <p className="text-muted small">Connecting your social sphere...</p>
+      <div className="spinner-ring" style={{ width: 56, height: 56, borderWidth: 4 }} />
     </div>
   );
 };

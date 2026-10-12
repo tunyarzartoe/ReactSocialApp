@@ -1,42 +1,33 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleReaction, getUserReactions } from "./postSlice";
+import { useDispatch } from "react-redux";
+import { addReaction } from "./postSlice";
 
 const reactionEmoji = {
-  thumbsUp: { emoji: "👍", label: "Like" },
-  heart: { emoji: "❤️", label: "Love" },
-  rocket: { emoji: "🚀", label: "Rocket" },
-  fire: { emoji: "🔥", label: "Fire" },
-  coffee: { emoji: "☕", label: "Coffee" },
-  wow: { emoji: "😮", label: "Wow" },
+  thumbsUp: "👍",
+  wow: "😮",
+  heart: "❤️",
+  rocket: "🚀",
+  coffee: "☕",
 };
 
 const ReactionButtons = ({ post }) => {
   const dispatch = useDispatch();
-  const userReactions = useSelector(getUserReactions);
-  const postUserReactions = userReactions[post.id] || {};
-
-  const handleReactionClick = (name) => {
-    dispatch(toggleReaction({ postId: post.id, reaction: name }));
-  };
 
   return (
-    <div className="reactions-bar">
-      {Object.entries(reactionEmoji).map(([name, { emoji, label }]) => {
-        const count = post.reactions?.[name] || 0;
-        const isActive = !!postUserReactions[name];
-
+    <div className="reactions-row">
+      {Object.entries(reactionEmoji).map(([name, emoji]) => {
+        const count = post.reactions[name];
         return (
           <button
             key={name}
             type="button"
-            className={`reaction-btn ${isActive ? "active" : ""}`}
-            onClick={() => handleReactionClick(name)}
-            title={`${label} (${count})`}
-            aria-label={`${label} (${count})`}
+            title={name}
+            className={`reaction-btn ${count > 0 ? "reacted" : ""}`}
+            onClick={() =>
+              dispatch(addReaction({ postId: post.id, reaction: name }))
+            }
           >
-            <span className="reaction-emoji">{emoji}</span>
-            <span className="reaction-count">{count}</span>
+            <span>{emoji}</span>
+            {count > 0 && <span style={{ fontSize: "0.75rem" }}>{count}</span>}
           </button>
         );
       })}

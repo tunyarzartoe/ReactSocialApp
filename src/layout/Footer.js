@@ -1,24 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="footer-text">
-        {/* <p> */}
-        &copy; {new Date().getFullYear()} |
-        <Link
-          className="px-1 footer-text"
+      <span>
+        &copy; {new Date().getFullYear()}{" "}
+        <a
           href="https://github.com/tunyarzartoe-coding"
           target="_blank"
-          // rel="noopener noreferrer"
-          // className="footer-link"
+          rel="noopener noreferrer"
         >
           Tun Yar Zar Toe
-        </Link>
+        </a>
         . All rights reserved.
-        {/* </p> */}
-      </div>
+      </span>
     </footer>
   );
 };

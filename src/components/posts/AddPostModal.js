@@ -1,205 +1,136 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
-import { fetchAllUsers } from "../users/userSlice";
 import { addNewPost } from "./postSlice";
+import { fetchAllUsers } from "../users/userSlice";
+import { Modal } from "react-bootstrap";
 import Select from "react-select";
+import { toast } from "react-toastify";
 
 const AddPostModal = ({ show, handleClose }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState(null);
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+  const [loading, setLoading] = useState(false);
 
   const users = useSelector(fetchAllUsers);
   const dispatch = useDispatch();
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (show) {
-      dispatch(fetchAllUsers());
-    }
-  }, [show, dispatch]);
-
-  const onTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-  const onContentChange = (e) => {
-    setContent(e.target.value);
-  };
-  const onAuthorChange = (selectedOption) => {
-    setAuthor(selectedOption);
-  };
 
   const usersOption = users.map((user) => ({
     value: user.id,
     label: user.name,
   }));
 
-  const canCreate = [title, content, author].every(Boolean);
+  const canCreate = [title.trim(), content.trim(), author].every(Boolean);
 
-  const onCancelClick = () => {
-    handleClose();
+  const resetForm = () => {
     setTitle("");
     setContent("");
     setAuthor(null);
   };
 
-  const onPostCreate = (event) => {
-    event.preventDefault();
-    console.log("hello clicked");
-    if (canCreate) {
-      try {
-        setAddRequestStatus("pending");
-        dispatch(
-          addNewPost({
-            title,
-            body: content,
-            userId: author.value,
-          })
-        ).unwrap();
-        setTitle("");
-        setContent("");
-        setAuthor(null);
+  const onCancel = () => {
+    resetForm();
+    handleClose();
+  };
 
-        navigate("/");
-      } catch (error) {
-        console.error("failed to save the post", error);
-      } finally {
-        setAddRequestStatus("idle");
-      }
+  const onPostCreate = async (e) => {
+    e.preventDefault();
+    if (!canCreate) return;
+    try {
+      setLoading(true);
+      await dispatch(
+        addNewPost({ title: title.trim(), body: content.trim(), userId: author.value })
+      ).unwrap();
+      toast.success("✨ Post created successfully!");
+      resetForm();
+      handleClose();
+    } catch (err) {
+      console.error("Failed to create post:", err);
+      toast.error("Failed to create post. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <div
-        className="modal fade"
-        id="addPostModal"
-        tabIndex="-1"
-        aria-labelledby="addPostModal"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-md rounded">
-          <div
-            className="modal-content"
-            style={{
-              background: "linear-gradient(65deg,#101841,#202b60)",
-              color: "#c6c6c6",
-            }}
-          >
-            <div
-              className="modal-header px-2 p-2"
-              style={{
-                background: "linear-gradient(65deg,#101841,#202b60)",
-                color: "#c6c6c6",
-                border: "none",
-                padding: 6,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 24,
-                  color: "#fff",
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  marginLeft: 2,
-                }}
-              >
-                Add New Post
-              </span>
-              <span
-                style={{ cursor: "pointer", marginRight: 5 }}
-                data-bs-dismiss="modal"
-                onClick={onCancelClick}
-              >
-                <i className="bi bi-x-lg" />
-              </span>
-            </div>
+    <Modal
+      show={show}
+      onHide={onCancel}
+      centered
+      contentClassName="modal-glass"
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>
+          <i className="bi bi-plus-circle me-2" style={{ color: "var(--accent)" }} />
+          New Post
+        </Modal.Title>
+      </Modal.Header>
 
-            <div
-              className="modal-body"
-              style={{ background: "linear-gradient(65deg,#101841,#202b60)" }}
-            >
-              <div className="d-flex flex-column justify-content-center">
-                <div className="row pb-3">
-                  <div className="col-3 d-flex justify-content-between align-items-center">
-                    <span className="text-nowrap text-start ">Post Title</span>
-                    <span>:</span>
-                  </div>
-                  <div className="col-9">
-                    <span className="w-100">
-                      <input
-                        placeholder="Enter Post Title"
-                        type="text"
-                        id="postTitle"
-                        value={title}
-                        onChange={onTitleChange}
-                        className="form-control"
-                      />
-                    </span>
-                  </div>
-                </div>
-                <div className="row pb-3">
-                  <div className="col-3 d-flex justify-content-between">
-                    <span className=" text-start ">Post Content</span>
-                    <span>:</span>
-                  </div>
-                  <div className="col-9">
-                    <span className="w-100">
-                      <textarea
-                        placeholder="Enter Post Content"
-                        id="postContent"
-                        value={content}
-                        onChange={onContentChange}
-                        className="form-control"
-                      />
-                    </span>
-                  </div>
-                </div>
-                <div className="row pb-3">
-                  <div className="col-3 d-flex justify-content-between">
-                    <span className=" text-start ">Author</span>
-                    <span>:</span>
-                  </div>
-                  <div className="col-9">
-                    <span className="w-100">
-                      <Select
-                        placeholder="Select Author"
-                        className="w-100"
-                        id="postAuthor"
-                        value={author}
-                        onChange={onAuthorChange}
-                        options={usersOption}
-                      />
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-3 text-end">
-                <button
-                  onClick={onPostCreate}
-                  disabled={!canCreate}
-                  className="btn btn-primary"
-                  data-bs-dismiss="modal"
-                >
-                  Create
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary ms-2"
-                  onClick={onCancelClick}
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
+      <Modal.Body>
+        <form onSubmit={onPostCreate}>
+          <div className="mb-3">
+            <label className="form-label-custom">Post Title</label>
+            <input
+              type="text"
+              className="form-control form-control-dark"
+              placeholder="Enter an engaging title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              autoFocus
+            />
           </div>
-        </div>
-      </div>
-    </div>
+
+          <div className="mb-3">
+            <label className="form-label-custom">Content</label>
+            <textarea
+              className="form-control form-control-dark"
+              placeholder="Share your thoughts..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={5}
+              style={{ resize: "none" }}
+            />
+          </div>
+
+          <div className="mb-1">
+            <label className="form-label-custom">Author</label>
+            <Select
+              placeholder="Select an author..."
+              classNamePrefix="select"
+              className="select-dark"
+              value={author}
+              onChange={setAuthor}
+              options={usersOption}
+            />
+          </div>
+        </form>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <button className="btn-ghost" onClick={onCancel} disabled={loading}>
+          Cancel
+        </button>
+        <button
+          className="btn-accent"
+          onClick={onPostCreate}
+          disabled={!canCreate || loading}
+        >
+          {loading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+              />
+              Creating...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-send me-1" /> Publish Post
+            </>
+          )}
+        </button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

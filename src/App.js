@@ -5,7 +5,7 @@ import SinglePost from "./components/posts/SinglePost";
 import { ToastContainer } from "react-toastify";
 import UserContainer from "./containers/user/UserContainer";
 import PostTable from "./components/posts/PostTable";
-import MainNavbar from "./layout/MainNavbar";
+
 
 
 function App() {
