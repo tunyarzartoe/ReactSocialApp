@@ -56,8 +56,14 @@ const EditPostModal = ({ post, show, handleClose }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered contentClassName="modal-glass">
-      <Modal.Header closeButton>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      contentClassName="modal-glass"
+      dialogClassName="modal-dialog-mobile"
+    >
+      <Modal.Header closeButton closeVariant="white">
         <Modal.Title>
           <i className="bi bi-pencil-square me-2" style={{ color: "var(--accent)" }} />
           Edit Post
@@ -82,7 +88,7 @@ const EditPostModal = ({ post, show, handleClose }) => {
               className="form-control form-control-dark"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              rows={5}
+              rows={4}
               style={{ resize: "none" }}
             />
           </div>
@@ -95,19 +101,24 @@ const EditPostModal = ({ post, show, handleClose }) => {
               value={author}
               onChange={setAuthor}
               options={usersOption}
+              menuPortalTarget={typeof document !== "undefined" ? document.body : null}
+              menuPosition="fixed"
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              }}
             />
           </div>
         </form>
       </Modal.Body>
 
-      <Modal.Footer>
+      <Modal.Footer className="modal-footer-mobile">
         <button className="btn-ghost" onClick={handleClose} disabled={loading}>
           Cancel
         </button>
         <button
           className="btn-accent"
           onClick={onUpdate}
-          disabled={!canUpdate}
+          disabled={!canUpdate || loading}
         >
           {loading ? (
             <>

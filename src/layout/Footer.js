@@ -6,7 +6,7 @@ const Footer = () => {
       <span>
         &copy; {new Date().getFullYear()}{" "}
         <a
-          href="https://github.com/tunyarzartoe-coding"
+          href="https://github.com/tunyarzartoe"
           target="_blank"
           rel="noopener noreferrer"
         >

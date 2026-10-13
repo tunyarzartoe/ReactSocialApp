@@ -42,7 +42,7 @@ const UserTable = () => {
         $("#userTable").DataTable().destroy();
       }
       $("#userTable").DataTable({
-        responsive: true,
+        responsive: false,
         pageLength: 10,
         language: {
           search: "",
@@ -66,7 +66,7 @@ const UserTable = () => {
   }
 
   return (
-    <div className="container mt-3 mb-5">
+    <div className="container mt-2 mb-5">
       {/* Page Header */}
       <div className="page-header">
         <h1 className="page-title">Users</h1>
@@ -74,14 +74,7 @@ const UserTable = () => {
       </div>
 
       {/* User Cards Grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-          gap: "1rem",
-          marginBottom: "2rem",
-        }}
-      >
+      <div className="user-cards-grid">
         {users.map((user, idx) => (
           <div key={user.id} className="user-card">
             <div
@@ -90,28 +83,28 @@ const UserTable = () => {
             >
               {getInitials(user.name)}
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="user-card-content">
               <p className="user-info-name">{user.name}</p>
               <p className="user-info-username">@{user.username}</p>
               <div className="user-detail">
-                <i className="bi bi-envelope" />
+                <i className="bi bi-envelope flex-shrink-0" />
                 <a
                   href={`mailto:${user.email}`}
-                  style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.78rem" }}
+                  className="user-detail-link"
                 >
                   {user.email}
                 </a>
               </div>
               <div className="user-detail">
-                <i className="bi bi-telephone" />
+                <i className="bi bi-telephone flex-shrink-0" />
                 <span>{user.phone}</span>
               </div>
               <div className="user-detail">
-                <i className="bi bi-building" />
+                <i className="bi bi-building flex-shrink-0" />
                 <span>{user.company?.name}</span>
               </div>
               <div className="user-detail">
-                <i className="bi bi-geo-alt" />
+                <i className="bi bi-geo-alt flex-shrink-0" />
                 <span>{user.address?.city}</span>
               </div>
             </div>
@@ -124,79 +117,81 @@ const UserTable = () => {
         <h5 style={{ color: "var(--text-primary)", fontWeight: 600, marginBottom: "1rem" }}>
           All Users — Directory
         </h5>
-        <table id="userTable" className="display w-100">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Company</th>
-              <th>City</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, idx) => (
-              <tr key={user.id}>
-                <td>
-                  <span
-                    style={{
-                      background: "rgba(79,142,247,0.12)",
-                      color: "var(--accent)",
-                      borderRadius: 20,
-                      padding: "2px 8px",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                    }}
-                  >
-                    #{user.id}
-                  </span>
-                </td>
-                <td>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <div
+        <div className="table-responsive-container">
+          <table id="userTable" className="display w-100 responsive-data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Company</th>
+                <th>City</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user, idx) => (
+                <tr key={user.id}>
+                  <td>
+                    <span
                       style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: "50%",
-                        background: AVATAR_GRADIENTS[idx % AVATAR_GRADIENTS.length],
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.65rem",
-                        fontWeight: 700,
-                        color: "#fff",
-                        flexShrink: 0,
+                        background: "rgba(79,142,247,0.12)",
+                        color: "var(--accent)",
+                        borderRadius: 20,
+                        padding: "2px 8px",
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
                       }}
                     >
-                      {getInitials(user.name)}
+                      #{user.id}
+                    </span>
+                  </td>
+                  <td>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <div
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: "50%",
+                          background: AVATAR_GRADIENTS[idx % AVATAR_GRADIENTS.length],
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "0.65rem",
+                          fontWeight: 700,
+                          color: "#fff",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {getInitials(user.name)}
+                      </div>
+                      <span style={{ whiteSpace: "nowrap" }}>{user.name}</span>
                     </div>
-                    {user.name}
-                  </div>
-                </td>
-                <td style={{ color: "var(--accent)", fontSize: "0.8125rem" }}>
-                  @{user.username}
-                </td>
-                <td>
-                  <a
-                    href={`mailto:${user.email}`}
-                    style={{ color: "var(--text-secondary)", fontSize: "0.8125rem", textDecoration: "none" }}
-                  >
-                    {user.email}
-                  </a>
-                </td>
-                <td style={{ color: "var(--text-secondary)", fontSize: "0.8125rem" }}>
-                  {user.phone}
-                </td>
-                <td style={{ fontSize: "0.8125rem" }}>{user.company?.name}</td>
-                <td style={{ color: "var(--text-secondary)", fontSize: "0.8125rem" }}>
-                  {user.address?.city}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                  <td style={{ color: "var(--accent)", fontSize: "0.8125rem", whiteSpace: "nowrap" }}>
+                    @{user.username}
+                  </td>
+                  <td>
+                    <a
+                      href={`mailto:${user.email}`}
+                      style={{ color: "var(--text-secondary)", fontSize: "0.8125rem", textDecoration: "none" }}
+                    >
+                      {user.email}
+                    </a>
+                  </td>
+                  <td style={{ color: "var(--text-secondary)", fontSize: "0.8125rem", whiteSpace: "nowrap" }}>
+                    {user.phone}
+                  </td>
+                  <td style={{ fontSize: "0.8125rem", whiteSpace: "nowrap" }}>{user.company?.name}</td>
+                  <td style={{ color: "var(--text-secondary)", fontSize: "0.8125rem", whiteSpace: "nowrap" }}>
+                    {user.address?.city}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

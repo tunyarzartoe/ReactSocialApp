@@ -58,8 +58,9 @@ const AddPostModal = ({ show, handleClose }) => {
       onHide={onCancel}
       centered
       contentClassName="modal-glass"
+      dialogClassName="modal-dialog-mobile"
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton closeVariant="white">
         <Modal.Title>
           <i className="bi bi-plus-circle me-2" style={{ color: "var(--accent)" }} />
           New Post
@@ -76,7 +77,6 @@ const AddPostModal = ({ show, handleClose }) => {
               placeholder="Enter an engaging title..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              autoFocus
             />
           </div>
 
@@ -87,7 +87,7 @@ const AddPostModal = ({ show, handleClose }) => {
               placeholder="Share your thoughts..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              rows={5}
+              rows={4}
               style={{ resize: "none" }}
             />
           </div>
@@ -101,12 +101,17 @@ const AddPostModal = ({ show, handleClose }) => {
               value={author}
               onChange={setAuthor}
               options={usersOption}
+              menuPortalTarget={typeof document !== "undefined" ? document.body : null}
+              menuPosition="fixed"
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              }}
             />
           </div>
         </form>
       </Modal.Body>
 
-      <Modal.Footer>
+      <Modal.Footer className="modal-footer-mobile">
         <button className="btn-ghost" onClick={onCancel} disabled={loading}>
           Cancel
         </button>

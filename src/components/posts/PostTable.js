@@ -26,7 +26,7 @@ const PostTable = () => {
         table.DataTable().destroy();
       }
       table.DataTable({
-        responsive: true,
+        responsive: false,
         pageLength: 10,
         order: [[3, "desc"]],
         columnDefs: [
@@ -64,9 +64,9 @@ const PostTable = () => {
   };
 
   return (
-    <div className="container mt-3 mb-5">
+    <div className="container mt-2 mb-5">
       {/* Page Header */}
-      <div className="page-header d-flex align-items-center justify-content-between">
+      <div className="page-header d-flex align-items-center justify-content-between flex-wrap gap-2">
         <div>
           <h1 className="page-title">Post Management</h1>
           <p className="page-subtitle">{posts.length} posts total</p>
@@ -77,87 +77,91 @@ const PostTable = () => {
       </div>
 
       <div className="datatable-wrapper">
-        <table id="postTable" className="display w-100">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Body</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((post) => (
-              <tr key={post.id}>
-                <td>
-                  <span
-                    style={{
-                      background: "rgba(79,142,247,0.12)",
-                      color: "var(--accent)",
-                      borderRadius: 20,
-                      padding: "2px 8px",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                    }}
-                  >
-                    #{post.id}
-                  </span>
-                </td>
-                <td style={{ maxWidth: 220 }}>
-                  <span
-                    style={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      textTransform: "capitalize",
-                    }}
-                  >
-                    {post.title}
-                  </span>
-                </td>
-                <td style={{ maxWidth: 340 }}>
-                  <span
-                    style={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      color: "var(--text-secondary)",
-                      fontSize: "0.8125rem",
-                    }}
-                  >
-                    {post.body}
-                  </span>
-                </td>
-                <td style={{ whiteSpace: "nowrap", color: "var(--text-secondary)", fontSize: "0.8rem" }}>
-                  {post.date
-                    ? formatDistanceToNow(parseISO(post.date)) + " ago"
-                    : "—"}
-                </td>
-                <td>
-                  <div style={{ display: "flex", gap: "6px" }}>
-                    <button
-                      className="btn-edit-icon"
-                      onClick={() => handleEdit(post)}
-                      title="Edit"
-                    >
-                      <i className="bi bi-pencil-square" />
-                    </button>
-                    <button
-                      className="btn-delete-icon"
-                      onClick={() => handleDelete(post)}
-                      title="Delete"
-                    >
-                      <i className="bi bi-trash" />
-                    </button>
-                  </div>
-                </td>
+        <div className="table-responsive-container">
+          <table id="postTable" className="display w-100 responsive-data-table">
+            <thead>
+              <tr>
+                <th style={{ width: "8%" }}>ID</th>
+                <th style={{ width: "30%" }}>Title</th>
+                <th style={{ width: "37%" }}>Body</th>
+                <th style={{ width: "15%" }}>Date</th>
+                <th style={{ width: "10%" }}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {posts.map((post) => (
+                <tr key={post.id}>
+                  <td>
+                    <span
+                      style={{
+                        background: "rgba(79,142,247,0.12)",
+                        color: "var(--accent)",
+                        borderRadius: 20,
+                        padding: "2px 8px",
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
+                      }}
+                    >
+                      #{post.id}
+                    </span>
+                  </td>
+                  <td style={{ maxWidth: 220 }}>
+                    <span
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {post.title}
+                    </span>
+                  </td>
+                  <td style={{ maxWidth: 300 }}>
+                    <span
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        color: "var(--text-secondary)",
+                        fontSize: "0.8125rem",
+                      }}
+                    >
+                      {post.body}
+                    </span>
+                  </td>
+                  <td style={{ whiteSpace: "nowrap", color: "var(--text-secondary)", fontSize: "0.8rem" }}>
+                    {post.date
+                      ? formatDistanceToNow(parseISO(post.date)) + " ago"
+                      : "—"}
+                  </td>
+                  <td>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                      <button
+                        className="btn-edit-icon"
+                        onClick={() => handleEdit(post)}
+                        title="Edit"
+                        aria-label="Edit post"
+                      >
+                        <i className="bi bi-pencil-square" />
+                      </button>
+                      <button
+                        className="btn-delete-icon"
+                        onClick={() => handleDelete(post)}
+                        title="Delete"
+                        aria-label="Delete post"
+                      >
+                        <i className="bi bi-trash" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Modals */}

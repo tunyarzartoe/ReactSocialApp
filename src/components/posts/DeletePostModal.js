@@ -24,8 +24,14 @@ const DeletePostModal = ({ post, show, handleClose }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered contentClassName="modal-glass">
-      <Modal.Header closeButton>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      contentClassName="modal-glass"
+      dialogClassName="modal-dialog-mobile"
+    >
+      <Modal.Header closeButton closeVariant="white">
         <Modal.Title>
           <i
             className="bi bi-exclamation-triangle-fill me-2"
@@ -36,7 +42,7 @@ const DeletePostModal = ({ post, show, handleClose }) => {
       </Modal.Header>
 
       <Modal.Body>
-        <p style={{ color: "var(--text-secondary)", marginBottom: 0 }}>
+        <p style={{ color: "var(--text-secondary)", marginBottom: 0, wordBreak: "break-word" }}>
           Are you sure you want to delete{" "}
           <strong style={{ color: "var(--text-primary)" }}>
             &ldquo;{post?.title}&rdquo;
@@ -45,7 +51,7 @@ const DeletePostModal = ({ post, show, handleClose }) => {
         </p>
       </Modal.Body>
 
-      <Modal.Footer>
+      <Modal.Footer className="modal-footer-mobile">
         <button className="btn-ghost" onClick={handleClose} disabled={loading}>
           Cancel
         </button>

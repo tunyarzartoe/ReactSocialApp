@@ -39,15 +39,15 @@ const SinglePost = () => {
 
   return (
     <div className="single-post-wrapper">
-      {/* Back */}
-      <Link to="/" className="back-btn" style={{ marginBottom: "1.25rem", display: "inline-flex" }}>
+      {/* Back button */}
+      <Link to="/" className="back-btn mb-3">
         <i className="bi bi-arrow-left" /> Back to Feed
       </Link>
 
-      <div className="single-post-card" style={{ marginTop: "1rem" }}>
+      <div className="single-post-card">
         {/* Header */}
-        <div style={{ padding: "1.5rem 1.5rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+        <div className="single-post-header">
+          <div className="d-flex align-items-center justify-content-between mb-2">
             <span className="single-post-badge">
               <i className="bi bi-hash" /> Post #{post.id}
             </span>
@@ -55,38 +55,31 @@ const SinglePost = () => {
               className="btn-edit-icon"
               onClick={() => setShowEdit(true)}
               title="Edit Post"
+              aria-label="Edit post"
             >
-              <i className="bi bi-pencil-square" />
+              <i className="bi bi-pencil-square me-1" />
+              <span>Edit</span>
             </button>
           </div>
           <h1 className="single-post-title">{post.title}</h1>
 
           {/* Author info */}
           {author && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                marginTop: "0.75rem",
-                padding: "0.75rem",
-                background: "var(--bg-card)",
-                borderRadius: "var(--radius-sm)",
-                border: "1px solid var(--border)",
-              }}
-            >
-              <div className="user-avatar-lg" style={{ width: 40, height: 40, fontSize: "1rem" }}>
-                {getInitials(author.name)}
-              </div>
-              <div>
-                <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--text-primary)" }}>
-                  {author.name}
+            <div className="single-post-author-bar">
+              <div className="d-flex align-items-center gap-2">
+                <div className="user-avatar-lg author-avatar-mobile">
+                  {getInitials(author.name)}
                 </div>
-                <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
-                  {author.email}
+                <div>
+                  <div className="single-post-author-name">
+                    {author.name}
+                  </div>
+                  <div className="single-post-author-email">
+                    {author.email}
+                  </div>
                 </div>
               </div>
-              <div style={{ marginLeft: "auto" }}>
+              <div className="single-post-time">
                 <TimeAgo date={post.date} />
               </div>
             </div>
@@ -94,22 +87,12 @@ const SinglePost = () => {
         </div>
 
         {/* Body */}
-        <div style={{ padding: "1.5rem" }}>
+        <div className="single-post-body-container">
           <p className="single-post-body">{post.body}</p>
         </div>
 
         {/* Reactions */}
-        <div
-          style={{
-            padding: "1rem 1.5rem",
-            borderTop: "1px solid var(--border)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-          }}
-        >
+        <div className="single-post-reactions-bar">
           <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)", fontWeight: 500 }}>
             Reactions
           </span>

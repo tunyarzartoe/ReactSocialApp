@@ -18,14 +18,23 @@ const PostContainer = () => {
   }, 0);
 
   return (
-    <div className="container" style={{ maxWidth: 600, paddingTop: "0.5rem" }}>
+    <div className="container feed-container">
       {/* Page Header */}
-      <div className="page-header">
-        <h1 className="page-title">
-          <i className="bi bi-rss me-2" style={{ color: "var(--accent)", fontSize: "1.4rem" }} />
-          Feed
-        </h1>
-        <p className="page-subtitle">Discover posts from the community</p>
+      <div className="page-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div>
+          <h1 className="page-title">
+            <i className="bi bi-rss me-2" style={{ color: "var(--accent)", fontSize: "1.3rem" }} />
+            Feed
+          </h1>
+          <p className="page-subtitle">Discover posts from the community</p>
+        </div>
+        <button
+          className="btn-accent d-sm-none"
+          onClick={() => setShowAdd(true)}
+          style={{ padding: "0.4rem 0.85rem", fontSize: "0.8125rem" }}
+        >
+          <i className="bi bi-plus-lg me-1" /> New Post
+        </button>
       </div>
 
       {/* Stats bar */}
@@ -52,7 +61,8 @@ const PostContainer = () => {
       {/* Floating Action Button */}
       <button
         className="fab"
-        title="New Post"
+        title="Create New Post"
+        aria-label="Create New Post"
         onClick={() => setShowAdd(true)}
       >
         <i className="bi bi-plus-lg" />
